@@ -14,18 +14,19 @@ Local build and run
 * Try it out
 
 ```bash
-./bin/todo mk "get ready for cloud deployment"
-./bin/todo list
+./bin/taskuser mk "Andreas Kollegger"
+./bin/taskuser list
 ```
 
-CLI Tool
---------
+CLI Tools
+---------
 
-A simplistic `todo` script in the `bin` directory can directly create, delete and list todos.
+A few simplistic cli tools are in the `bin`, which directory can directly create, delete and list entities.
 
-    Usage: todo [ list | mk | rm ]
+    Usage: {taskuser | address} [ list | mk | rm ]
 
-      todo list            - list current todos
-      todo mk "a new todo" - to create a todo
-      todo rm 1            - to remove the todo with id 1
+      Sub-commands:
+      list            - list current entities
+      mk "some thing" - to create an entity
+      rm 1            - to remove the entity with id 1
 
