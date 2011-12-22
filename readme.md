@@ -25,7 +25,7 @@ That last command should add the address "1609 Lancaster" to the user "Andreas K
 CLI Tools
 ---------
 
-A few simplistic cli tools are in the `bin`, which directory can directly create, delete and list entities.
+A few simplistic cli tools are in the `bin`, which can directly create, delete and list entities.
 
     Usage: {taskuser | address} [ list | mk | rm | rel ]
 
