@@ -1,12 +1,15 @@
 package org.akollegger.trial.useraddy.controller;
 
+import org.akollegger.trial.useraddy.model.Address;
 import org.akollegger.trial.useraddy.model.TaskUser;
+import org.akollegger.trial.useraddy.repository.AddressRepository;
 import org.akollegger.trial.useraddy.repository.TaskUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriUtils;
 import org.springframework.web.util.WebUtils;
@@ -20,6 +23,9 @@ public class TaskUserController {
 	
     @Autowired
     TaskUserRepository taskusers;
+
+    @Autowired
+    AddressRepository addresses;
 
     /**
      * POST /taskusers { "name": "name of the taskuser" }
@@ -108,6 +114,26 @@ public class TaskUserController {
         }
         taskusers.delete(taskuser);
         return new ResponseEntity<String>(headers, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/{id}/addresses/{address}", method = RequestMethod.POST, headers = "Accept=application/json")
+    @ResponseBody
+    @Transactional
+    public ResponseEntity<String> addAddressToUser(@PathVariable("id") Long userId, @PathVariable("address") Long addressId, @RequestBody String json) {
+        TaskUser taskUser = taskusers.findOne(userId);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Type", "application/json; charset=utf-8");
+        if (taskUser == null) {
+            return new ResponseEntity<String>(headers, HttpStatus.NOT_FOUND);
+        }
+        Address possibleAddress = addresses.findOne(addressId);
+        if (possibleAddress == null) {
+            return new ResponseEntity<String>(headers, HttpStatus.NOT_FOUND);
+        }
+        taskUser.addAddress(possibleAddress);
+        Address foundAddress = addresses.save(possibleAddress);
+        taskusers.save(taskUser);
+        return new ResponseEntity<String>(foundAddress.toJson(), headers, HttpStatus.CREATED);
     }
 
     String encodeUrlPathSegment(String pathSegment, HttpServletRequest httpServletRequest) {

@@ -2,10 +2,13 @@ package org.akollegger.trial.useraddy.model;
 
 import flexjson.JSONDeserializer;
 import flexjson.JSONSerializer;
+import org.neo4j.graphdb.Direction;
 import org.neo4j.graphdb.Node;
 import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.data.neo4j.annotation.Fetch;
 import org.springframework.data.neo4j.annotation.GraphId;
 import org.springframework.data.neo4j.annotation.NodeEntity;
+import org.springframework.data.neo4j.annotation.RelatedTo;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -21,24 +24,33 @@ public class Address {
 
     private String text;
 
-    public Address() {;}
+    @Fetch @RelatedTo( type = "HAS_ADDRESS", direction = Direction.INCOMING )
+    TaskUser owner;
 
-    public Address(Node n) {
-        setPersistentState(n);
-    }
-    
     public Long getId() {
-        return getNodeId();
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getText() {
-        return this.text;
+        return text;
     }
-    
+
     public void setText(String text) {
         this.text = text;
     }
-    
+
+    public TaskUser getOwner() {
+        return owner;
+    }
+
+    public void setOwner(TaskUser owner) {
+        this.owner = owner;
+    }
+
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("Text: ").append(getText());

@@ -21,14 +21,8 @@ public class User {
 
     private String name;
 
-    public User() {;}
-
-    public User(Node n) {
-        setPersistentState(n);
-    }
-    
     public Long getId() {
-        return getNodeId();
+        return id;
     }
 
     public String getName() {

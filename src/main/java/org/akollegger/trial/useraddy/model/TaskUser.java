@@ -2,12 +2,24 @@ package org.akollegger.trial.useraddy.model;
 
 import flexjson.JSONDeserializer;
 import flexjson.JSONSerializer;
+import org.neo4j.graphdb.Direction;
+import org.springframework.data.neo4j.annotation.Fetch;
+import org.springframework.data.neo4j.annotation.RelatedTo;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 public class TaskUser extends User {
+
+    @Fetch @RelatedTo( type="HAS_ADDRESS", elementClass = Address.class, direction = Direction.BOTH )
+    private Set<Address> addresses = new HashSet<Address>();
+
+    public Set<Address> getAddresses() {
+        return addresses;
+    }
+
+    public void addAddress(Address address) {
+        this.addresses.add(address);
+    }
 
     public String toJson() {
         return new JSONSerializer().exclude("*.class", "*.persistentState", "*.entityState").serialize(this);

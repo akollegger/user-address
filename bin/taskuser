@@ -31,8 +31,15 @@ remove() {
   curl -X DELETE ${CURL_OPTS} ${REST_ENDPOINT} 
 }
 
+relate() {
+  ID=$1
+  ADDY_ID=$2
+  REST_ENDPOINT="${REST_ENDPOINT}/${ID}/addresses/${ADDY_ID}"
+  curl -d "{ }" DELETE ${CURL_OPTS} ${REST_ENDPOINT}
+}
+
 usage() {
-  echo "Usage: $0 { list | mk | rm }"
+  echo "Usage: $0 { list | mk | rm  | rel }"
 }
 
 if [ "$1" == "" ]; then
@@ -54,6 +61,11 @@ case "$1" in
     if [ "$2" == "" ]; then usage; echo "  rm {id}"; exit 1; fi
     remove "$2"
     ;;
+  rel)
+    if [ "$3" == "" ]; then usage; echo "  rm {id}"; exit 1; fi
+    relate "$2" "$3"
+    ;;
+
   *)
     usage
     ;;
