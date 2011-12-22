@@ -1,10 +1,8 @@
-package org.akollegger.neo4j.scsdn;
+package org.akollegger.trial.useraddy.model;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-
-import javax.annotation.Resource;
 
 import org.neo4j.graphdb.Node;
 import org.springframework.beans.factory.annotation.Configurable;
@@ -16,19 +14,19 @@ import flexjson.JSONSerializer;
 
 @NodeEntity
 @Configurable
-public class Todo {
+public class User {
 
     @SuppressWarnings("unused")
 	@GraphId
     private Long id;
-    
+
     private String title;
 
     private Boolean isDone = false;
 
-    public Todo() {;}
-    
-    public Todo(Node n) {
+    public User() {;}
+
+    public User(Node n) {
         setPersistentState(n);
     }
     
@@ -63,16 +61,16 @@ public class Todo {
         return new JSONSerializer().exclude("*.class", "*.persistentState", "*.entityState").serialize(this);
     }    
 
-    public static String toJsonArray(Iterable<Todo> collection) {
+    public static String toJsonArray(Iterable<User> collection) {
         return new JSONSerializer().exclude("*.class", "*.persistentState", "*.entityState").serialize(collection);
     }
 
-    public static Todo fromJsonToTodo(String json) {
-        return new JSONDeserializer<Todo>().use(null, Todo.class).deserialize(json);
+    public static User fromJsonToTodo(String json) {
+        return new JSONDeserializer<User>().use(null, User.class).deserialize(json);
     }
     
-    public static Collection<Todo> fromJsonArrayToTodoes(String json) {
-        return new JSONDeserializer<List<Todo>>().use(null, ArrayList.class).use("values", Todo.class).deserialize(json);
+    public static Collection<User> fromJsonArrayToTodoes(String json) {
+        return new JSONDeserializer<List<User>>().use(null, ArrayList.class).use("values", User.class).deserialize(json);
     }
 
 }
