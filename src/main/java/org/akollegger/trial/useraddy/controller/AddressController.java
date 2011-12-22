@@ -1,116 +1,112 @@
 package org.akollegger.trial.useraddy.controller;
 
-import java.io.UnsupportedEncodingException;
-
-import javax.servlet.http.HttpServletRequest;
-
-import org.akollegger.neo4j.scsdn.Todo;
-import org.akollegger.neo4j.scsdn.TodoRepository;
+import org.akollegger.trial.useraddy.model.Address;
+import org.akollegger.trial.useraddy.repository.AddressRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriUtils;
 import org.springframework.web.util.WebUtils;
 
-@RequestMapping("/todos")
+import javax.servlet.http.HttpServletRequest;
+import java.io.UnsupportedEncodingException;
+
+@RequestMapping("/addresses")
 @Controller
 public class AddressController {
 	
-    @Autowired TodoRepository todos;
+    @Autowired
+    AddressRepository addresses;
 
     /**
-     * POST /todos { "title": "text of the todo" }
+     * POST /addresses { "text": "text of the address" }
      * 
-     * Creates a new todo.
+     * Creates a new address.
      * 
      * @param json
-     * @return json containing the id of the newly created todo
+     * @return json containing the id of the newly created address
      */
     @RequestMapping(method = RequestMethod.POST, headers = "Accept=application/json")
     public ResponseEntity<String> createFromJson(@RequestBody String json) {
-        Todo createdTodo = todos.save(Todo.fromJsonToTodo(json));
+        Address createdAddress = addresses.save(Address.fromJsonToAddress(json));
         HttpHeaders headers= new HttpHeaders();
         headers.add("Content-Type", "application/text");
-        return new ResponseEntity<String>("{\"id\":" + createdTodo.getId() + "}", headers, HttpStatus.CREATED);
+        return new ResponseEntity<String>("{\"id\":" + createdAddress.getId() + "}", headers, HttpStatus.CREATED);
     }
    
     /**
-     * GET /todos/{id}
+     * GET /addresses/{id}
      * 
-     * Gets the full json for a todo.
+     * Gets the full json for a address.
      * 
      * @param id
-     * @return json representation of the requested todo, or HttpStatus.NOT_FOUND
+     * @return json representation of the requested address, or HttpStatus.NOT_FOUND
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
     @ResponseBody
     public ResponseEntity<String> showJson(@PathVariable("id") Long id) {
-        Todo todo = todos.findOne(id);
+        Address address = addresses.findOne(id);
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", "application/text; charset=utf-8");
-        if (todo == null) {
+        if (address == null) {
             return new ResponseEntity<String>(headers, HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<String>(todo.toJson(), headers, HttpStatus.OK);
+        return new ResponseEntity<String>(address.toJson(), headers, HttpStatus.OK);
     }
     
     /**
-     * Get /todos/
+     * Get /addresses/
      * 
-     * Gets a json array of all todos.
+     * Gets a json array of all addresses.
      * 
-     * @return json array representation of all todos
+     * @return json array representation of all addresses
      */
     @RequestMapping(headers = "Accept=application/json")
     @ResponseBody
     public ResponseEntity<String> listJson() {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", "application/text; charset=utf-8");
-        return new ResponseEntity<String>(Todo.toJsonArray(todos.findAll()), headers, HttpStatus.OK);
+        return new ResponseEntity<String>(Address.toJsonArray(addresses.findAll()), headers, HttpStatus.OK);
     }
 
     /**
-     * PUT /todos/ { "id": id, "title": "text of todo", idDone: true|false }
+     * PUT /addresses/ { "id": id, "title": "text of address", idDone: true|false }
      * 
-     * Updates an existing todo.
+     * Updates an existing address.
      * 
-     * @param json full json representation of the todo to update
+     * @param json full json representation of the address to update
      * @return
      */
     @RequestMapping(method = RequestMethod.PUT, headers = "Accept=application/json")
     public ResponseEntity<String> updateFromJson(@RequestBody String json) {
         HttpHeaders headers= new HttpHeaders();
         headers.add("Content-Type", "application/text");
-        if (todos.save(Todo.fromJsonToTodo(json)) == null) {
+        if (addresses.save(Address.fromJsonToAddress(json)) == null) {
             return new ResponseEntity<String>(headers, HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<String>(headers, HttpStatus.OK);
     }
     
     /**
-     * DELETE /todos/{id}
+     * DELETE /addresses/{id}
      * 
-     * Deletes an existing todo. 
+     * Deletes an existing address.
      * 
      * @param id
      * @return
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
     public ResponseEntity<String> deleteFromJson(@PathVariable("id") Long id) {
-        Todo todo = todos.findOne(id);
+        Address address = addresses.findOne(id);
         HttpHeaders headers= new HttpHeaders();
         headers.add("Content-Type", "application/text");
-        if (todo == null) {
+        if (address == null) {
             return new ResponseEntity<String>(headers, HttpStatus.NOT_FOUND);
         }
-        todos.delete(todo);
+        addresses.delete(address);
         return new ResponseEntity<String>(headers, HttpStatus.OK);
     }
 

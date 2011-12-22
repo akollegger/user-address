@@ -1,7 +1,7 @@
 package org.akollegger.trial.useraddy.controller;
 
-import org.akollegger.trial.useraddy.model.Address;
-import org.akollegger.trial.useraddy.repository.AddressRepository;
+import org.akollegger.trial.useraddy.model.TaskUser;
+import org.akollegger.trial.useraddy.repository.TaskUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -14,99 +14,99 @@ import org.springframework.web.util.WebUtils;
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
 
-@RequestMapping("/addresses")
+@RequestMapping("/taskusers")
 @Controller
 public class TaskUserController {
 	
     @Autowired
-    AddressRepository addresses;
+    TaskUserRepository taskusers;
 
     /**
-     * POST /addresses { "text": "text of the address" }
+     * POST /taskusers { "name": "name of the taskuser" }
      * 
-     * Creates a new address.
+     * Creates a new taskuser.
      * 
      * @param json
-     * @return json containing the id of the newly created address
+     * @return json containing the id of the newly created taskuser
      */
     @RequestMapping(method = RequestMethod.POST, headers = "Accept=application/json")
     public ResponseEntity<String> createFromJson(@RequestBody String json) {
-        Address createdAddress = addresses.save(Address.fromJsonToAddress(json));
+        TaskUser createdTaskUser = taskusers.save(TaskUser.fromJsonToTaskUser(json));
         HttpHeaders headers= new HttpHeaders();
         headers.add("Content-Type", "application/text");
-        return new ResponseEntity<String>("{\"id\":" + createdAddress.getId() + "}", headers, HttpStatus.CREATED);
+        return new ResponseEntity<String>("{\"id\":" + createdTaskUser.getId() + "}", headers, HttpStatus.CREATED);
     }
    
     /**
-     * GET /addresses/{id}
+     * GET /taskusers/{id}
      * 
-     * Gets the full json for a address.
+     * Gets the full json for a taskuser.
      * 
      * @param id
-     * @return json representation of the requested address, or HttpStatus.NOT_FOUND
+     * @return json representation of the requested taskuser, or HttpStatus.NOT_FOUND
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
     @ResponseBody
     public ResponseEntity<String> showJson(@PathVariable("id") Long id) {
-        Address address = addresses.findOne(id);
+        TaskUser taskuser = taskusers.findOne(id);
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", "application/text; charset=utf-8");
-        if (address == null) {
+        if (taskuser == null) {
             return new ResponseEntity<String>(headers, HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<String>(address.toJson(), headers, HttpStatus.OK);
+        return new ResponseEntity<String>(taskuser.toJson(), headers, HttpStatus.OK);
     }
     
     /**
-     * Get /addresses/
+     * Get /taskusers/
      * 
-     * Gets a json array of all addresses.
+     * Gets a json array of all taskusers.
      * 
-     * @return json array representation of all addresses
+     * @return json array representation of all taskusers
      */
     @RequestMapping(headers = "Accept=application/json")
     @ResponseBody
     public ResponseEntity<String> listJson() {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", "application/text; charset=utf-8");
-        return new ResponseEntity<String>(Address.toJsonArray(addresses.findAll()), headers, HttpStatus.OK);
+        return new ResponseEntity<String>(TaskUser.toJsonArray(taskusers.findAll()), headers, HttpStatus.OK);
     }
 
     /**
-     * PUT /addresses/ { "id": id, "title": "text of address", idDone: true|false }
+     * PUT /taskusers/ { "id": id, "title": "text of taskuser", idDone: true|false }
      * 
-     * Updates an existing address.
+     * Updates an existing taskuser.
      * 
-     * @param json full json representation of the address to update
+     * @param json full json representation of the taskuser to update
      * @return
      */
     @RequestMapping(method = RequestMethod.PUT, headers = "Accept=application/json")
     public ResponseEntity<String> updateFromJson(@RequestBody String json) {
         HttpHeaders headers= new HttpHeaders();
         headers.add("Content-Type", "application/text");
-        if (addresses.save(Address.fromJsonToAddress(json)) == null) {
+        if (taskusers.save(TaskUser.fromJsonToTaskUser(json)) == null) {
             return new ResponseEntity<String>(headers, HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<String>(headers, HttpStatus.OK);
     }
     
     /**
-     * DELETE /addresses/{id}
+     * DELETE /taskusers/{id}
      * 
-     * Deletes an existing address.
+     * Deletes an existing taskuser.
      * 
      * @param id
      * @return
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
     public ResponseEntity<String> deleteFromJson(@PathVariable("id") Long id) {
-        Address address = addresses.findOne(id);
+        TaskUser taskuser = taskusers.findOne(id);
         HttpHeaders headers= new HttpHeaders();
         headers.add("Content-Type", "application/text");
-        if (address == null) {
+        if (taskuser == null) {
             return new ResponseEntity<String>(headers, HttpStatus.NOT_FOUND);
         }
-        addresses.delete(address);
+        taskusers.delete(taskuser);
         return new ResponseEntity<String>(headers, HttpStatus.OK);
     }
 

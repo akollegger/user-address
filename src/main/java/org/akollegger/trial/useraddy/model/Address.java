@@ -19,7 +19,7 @@ public class Address {
 	@GraphId
     private Long id;
 
-    private String name;
+    private String text;
 
     public Address() {;}
 
@@ -31,17 +31,17 @@ public class Address {
         return getNodeId();
     }
 
-    public String getName() {
-        return this.name;
+    public String getText() {
+        return this.text;
     }
     
-    public void setName(String name) {
-        this.name = name;
+    public void setText(String text) {
+        this.text = text;
     }
     
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("Name: ").append(getName());
+        sb.append("Text: ").append(getText());
         return sb.toString();
     }
     
@@ -53,11 +53,11 @@ public class Address {
         return new JSONSerializer().exclude("*.class", "*.persistentState", "*.entityState").serialize(collection);
     }
 
-    public static Address fromJsonToTodo(String json) {
+    public static Address fromJsonToAddress(String json) {
         return new JSONDeserializer<Address>().use(null, Address.class).deserialize(json);
     }
     
-    public static Collection<Address> fromJsonArrayToTodoes(String json) {
+    public static Collection<Address> fromJsonArrayToAddresses(String json) {
         return new JSONDeserializer<List<Address>>().use(null, ArrayList.class).use("values", Address.class).deserialize(json);
     }
 

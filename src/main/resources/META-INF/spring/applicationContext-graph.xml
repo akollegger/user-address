@@ -10,7 +10,7 @@
 		http://www.springframework.org/schema/tx 
     http://www.springframework.org/schema/tx/spring-tx-2.5.xsd">
 
-    <neo4j:repositories base-package="org.akollegger.neo4j.scsdn"/>
+    <neo4j:repositories base-package="org.akollegger.trial.useraddy.repository"/>
     <tx:annotation-driven mode="aspectj"/>
     
     <neo4j:config storeDirectory="target/todos.graphdb"/>

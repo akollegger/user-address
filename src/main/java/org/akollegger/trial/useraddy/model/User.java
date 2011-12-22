@@ -1,16 +1,15 @@
 package org.akollegger.trial.useraddy.model;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
+import flexjson.JSONDeserializer;
+import flexjson.JSONSerializer;
 import org.neo4j.graphdb.Node;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.data.neo4j.annotation.GraphId;
 import org.springframework.data.neo4j.annotation.NodeEntity;
 
-import flexjson.JSONDeserializer;
-import flexjson.JSONSerializer;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 @NodeEntity
 @Configurable
@@ -20,9 +19,7 @@ public class User {
 	@GraphId
     private Long id;
 
-    private String title;
-
-    private Boolean isDone = false;
+    private String name;
 
     public User() {;}
 
@@ -34,26 +31,17 @@ public class User {
         return getNodeId();
     }
 
-    public String getTitle() {
-        return this.title;
+    public String getName() {
+        return this.name;
     }
     
-    public void setTitle(String title) {
-        this.title = title;
-    }
-    
-    public Boolean getIsDone() {
-        return this.isDone;
-    }
-    
-    public void setIsDone(Boolean done) {
-        this.isDone = done;
+    public void setName(String name) {
+        this.name = name;
     }
     
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("Done: ").append(getIsDone()).append(", ");
-        sb.append("Title: ").append(getTitle());
+        sb.append("Name: ").append(getName());
         return sb.toString();
     }
     
@@ -65,11 +53,11 @@ public class User {
         return new JSONSerializer().exclude("*.class", "*.persistentState", "*.entityState").serialize(collection);
     }
 
-    public static User fromJsonToTodo(String json) {
+    public static User fromJsonToUser(String json) {
         return new JSONDeserializer<User>().use(null, User.class).deserialize(json);
     }
     
-    public static Collection<User> fromJsonArrayToTodoes(String json) {
+    public static Collection<User> fromJsonArrayToUsers(String json) {
         return new JSONDeserializer<List<User>>().use(null, ArrayList.class).use("values", User.class).deserialize(json);
     }
 
